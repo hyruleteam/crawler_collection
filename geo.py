@@ -32,10 +32,10 @@ UA_LIST = [
 FILE_PATH= "/"
 file = open('data.json', 'w')
 year = "2018"
-data = []
-province_data = []
-city_data = []
-area_data = []
+data = {}
+province_data = {}
+city_data = {}
+area_data = {}
 
 def httpGet(url):
     session= requests.Session()
@@ -73,11 +73,10 @@ def getProvince(year):
 
             print(province_name)
 
-            province_data.append({
+            province_data[code] = {
                 'name':province_name,
-                'code':code,
                 'parent_code':''
-            })
+            }
 
     return province_data;
 
@@ -93,11 +92,10 @@ def getCity(year,provinceCode):
         
         print(city_name)
 
-        city_data.append({
+        city_data[code] = {
             'name':city_name,
-            'code':code,
             'parent_code':provinceCode
-        })
+        }
             
 
     return city_data;
@@ -127,9 +125,10 @@ def getArea(year,provinceCode,cityCode):
 
         print(rst["name"])
 
-        rst['parent_code'] = cityCode
-
-        area_data.append(rst)
+        city_data[rst["code"]] = {
+            'name':rst["name"],
+            'parent_code':cityCode
+        }
 
     return area_data;
     
@@ -140,14 +139,16 @@ if __name__ == '__main__':
     getProvince(year)
 
     print("======开始获取城市数据======")
-    for item in province_data:
-        getCity(year,item['code'])
+    for item in list(province_data.keys()):
+        getCity(year,item)
 
     print("======开始获取区数据======")
-    for item in city_data:
-        getArea(year,item['parent_code'],item['code'])
+    for item in list(city_data.keys()):
+        getArea(year,city_data[item]['parent_code'],item)
 
-    data = province_data + city_data + area_data
+    data.update(province_data)
+    data.update(city_data)
+    data.update(area_data)
     file.write(json.dumps(data,ensure_ascii=False, indent=4, separators=(',', ':')))
     file.close();
 
