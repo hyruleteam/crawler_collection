@@ -10,7 +10,7 @@ import json
 from bs4 import BeautifulSoup
 
 data = []
-FILE_PATH = "/Users/wenyu/Documents/work_project/github/hyruleteam/crawler_collection/"
+FILE_PATH = "/"
 def download_info():
     url = 'http://youxi.029815.cn/down/yxdownvip.html'
 

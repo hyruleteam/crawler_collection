@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
 offset = 0
-FILE_PATH = "/Users/wenyu/Documents/work_project/github/wenyuking/python_code/oct"
+FILE_PATH = "/"
 def download_lp_info(offset):
     url = 'https://octodex.github.com'
 

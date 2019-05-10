@@ -1,7 +1,7 @@
 import os
 import urllib.request
 
-def save_img(file_path='/Users/wenyu/Desktop/weather'):
+def save_img(file_path='/'):
     #保存图片到磁盘文件夹 file_path中，默认为当前脚本运行目录下的 book\img文件夹
     try:
         if not os.path.exists(file_path):
