@@ -9,15 +9,17 @@ from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
 offset = 0
-token = '/wEPDwULLTE5MDQ3MzMzNzMPZBYCAgMPZBYEAgsPFgIeC18hSXRlbUNvdW50Ag8WHmYPZBYCZg8VCQIzOQkyMDExMDYwMjACMzkG6KeC6YK4AjMjBzk4MzAuMzcCOTkJMTEsMzE2LjE0AGQCAQ9kFgJmDxUJAjUzCTIwMTEwNjAyMwI1MwznmofpqazoirHlm60OMzgsNDIsNDMsNDQsNDUIMTQ4NjkuNDQDMTMzCDUsNDkwLjQ2AGQCAg9kFgJmDxUJAjM0CTIwMTEwNjAxNwIzNBLmmJPlsYXlkIzovonljJfoi5EDMTYjCDEyNzUwLjkxAzIzNgg3LDg0Ni4wOABkAgMPZBYCZg8VCQI1MAkyMDExMDYwMTYCNTAM5Lmm6aaZ6Zeo56ysAjkjCDI2MzgwLjA4AzI3Mgg3LDAzMS44NABkAgQPZBYCZg8VCQI0MwkyMDExMDYwMTUCNDMS5Y2X6Imz5rmW55WU5bCP5Yy6AjEzCDI1MTQ0Ljk2AzI2NAg2LDMyNC45NgBkAgUPZBYCZg8VCQI0NQkyMDExMDYwMTkCNDUS5oGS55ub55qH5a626Iqx5ZutBTIjLDQjCDQxMDM1LjcxAzM4NAg1LDUxOC45OABkAgYPZBYCZg8VCQIzNQkyMDExMDYwMTMCMzUM5aSn5a+M57u/5rSyATgIMjA5NTguOTQDMjE2CDYsNTUwLjc2AGQCBw9kFgJmDxUJAjM4CTIwMTEwNjAxOAIzOAzlpKflr4znu7/mtLIFNyw2LDUIMzU1MjQuODgDMzA2CDYsOTkxLjM5AGQCCA9kFgJmDxUJAjQ0CTIwMTEwNjAxMgI0NAnmmIrlpKnlm60GMzAj5qW8CDE1OTA0LjU2AzE3NAg2LDAwMi40NABkAgkPZBYCZg8VCQIyMAkyMDExMDYwMDcCMjAM6YeR5rW36Iqx5ZutATYHOTAyMi42MgI5MAg2LDI5NC45OQBkAgoPZBYCZg8VCQE2CTIwMTEwNjAxMQE2DOWkqemqj+iKseWbrQMxMCMIMjM3MDkuODADMjMxCDcsMDUyLjE3AGQCCw9kFgJmDxUJAjI1CTIwMTEwNjAwOAIyNRPkv6Hovr4u5rC05bK46IyX6YO9BzEzIywxNyMIMTQyNjIuNjIDMTMwCDcsMjE0LjIxAGQCDA9kFgJmDxUJAjQyCTIwMTEwNzAwNAI0Mhjnu7/ln47nv6Hnv6DmuZbnjqvnkbDlm60PMTEj5rOV5byP5ZCI6ZmiBzc5MDkuNjACMTIJMjUsMDI5Ljg5AGQCDQ9kFgJmDxUJAjQwCTIwMTEwNjAwOQI0MAzph5HoibLlkI3pg6EBOQgyMjAyNC4yNgMxMjQJMTAsNDMxLjM4AGQCDg9kFgJmDxUJAjEzCTIwMTEwNjAxMAIxMxzlh6Tlh7Dln44/5a625a625pmv5Zut5Zub5pyfAkE3CDEwMTE3LjQ0AzEwOAg2LDk1MC41NgBkAg0PDxYEHgtSZWNvcmRjb3VudAL7FB4QQ3VycmVudFBhZ2VJbmRleAKyAWRkZAprHYx2dSVKpGJdGfrVokc/iqCm'
+token = '/wEPDwULLTE5MDQ3MzMzNzMPZBYCAgMPZBYEAgsPFgIeC18hSXRlbUNvdW50AgoWFGYPZBYCZg8VCQQ1OTE3CTIwMTkwMTAwNAQ1OTE3DOW8gOWFg+WFrOmmhh8x5Y+35qW8LDLlj7fmpbwsM+WPt+alvCw15Y+35qW8CDM4MDE4LjE2AzM0NgkxMCw0OTkuODIEMC4wMGQCAQ9kFgJmDxUJBDU4NjAJMjAxODEyMDU2BDU4NjAQ6J6N5a6B5bqcSuWcsOWdlwUxLDIsMwg0Nzg1OC4yNAMzNzYJMTcsMjAwLjAwCjYzNiw0MTIuNzdkAgIPZBYCZg8VCQQ1ODM5CTIwMTgxMjA1NQQ1ODM5DOaCpumDveWFrOmmhgcxMSMsMjIjCDEzODUxLjUyAzEyMgkxMiw3ODEuNTIKMjI3LDA3NC4xMGQCAw9kFgJmDxUJBDU4MjMJMjAxODEyMDU0BDU4MjMM5pe25Luj6ZSm5ZutCTEjLDIjLDE3IwgzMDg0OS4xMAMyNjgJMTIsODE2LjgxCjIyOCwyMzAuNDRkAgQPZBYCZg8VCQQ1ODk4CTIwMTgxMjA0MAQ1ODk4EuS4lue6quiNo+W7t+Wwj+WMugIzOQgyMzM4Ny44NAMyMjQIOSw4NzcuMzgEMC4wMGQCBQ9kFgJmDxUJBDU4MjAJMjAxODEyMDM2BDU4MjAJ6b6Z5bed6YeMEDksMTAsNiw3LDgsMTEsMTIIODMyMzUuNjEDNzc4CTE1LDk5OS44OQQwLjAwZAIGD2QWAmYPFQkENTg4NAkyMDE4MTIwMzUENTg4NAznv6HnjonlhazppoYHQi04LEItOQc5MDY5LjY0AjQ4CTIwLDk5OC4zOAQwLjAwZAIHD2QWAmYPFQkENTg4MQkyMDE4MTIwMjYENTg4MQzplKbnhpnpm4Xoi5EgMiMsOCMsMTAjLDExIywxMiMsMyMsNCMsNSMsNyMsOSMINDM4NjEuOTQDMjY4CTE5LDUwMC4zNgo1MTgsNDg3LjU1ZAIID2QWAmYPFQkENTg3OAkyMDE4MTIwMjUENTg3OAzplKbnhpnpm4Xoi5ECMSMHNTc1MC44MAI0MAkxNywwMDAuMDYKNTAzLDE5NS4wMGQCCQ9kFgJmDxUJBDU4NTgJMjAxODEyMDEzBDU4NTgM5rqq5bK46KeC6YK4EUQyLEQ1LEQ2LEQ3LEQ4LEQ5BzU0NDYuNjgCMjQJMTQsNzI5Ljc5BDAuMDBkAg0PDxYGHghQYWdlU2l6ZQIKHgtSZWNvcmRjb3VudAK7FR4QQ3VycmVudFBhZ2VJbmRleAIIZGRkhhkrK0KGYBLgZA4qunZZwdacoC4='
 
 
 wb = Workbook()
 sheet = wb.create_sheet()
 filename = datetime.now().strftime("%Y-%m-%d")
-print(filename)
+
+sheet.append(['备案号','楼盘名称','楼号','建筑面积(㎡)','套数','均价(元/㎡)','装修总价(元)'])
+
 def download_lp_info(offset):
-    url = 'http://220.178.124.94/fangjia/ws/DefaultList.aspx'
+    url = 'http://220.178.124.94:8010/fangjia/ws/DefaultList.aspx'
 
     session = requests.Session()
     session.headers = {
@@ -28,14 +30,14 @@ def download_lp_info(offset):
     page = session.post(url, data = payload, timeout=30000)
 
     soup = BeautifulSoup(page.text, features="html.parser")
-    
+
     data = []
     tr_list = soup.find_all('tr')
     tr_list_len = len(tr_list)
     tr_list_true = []
 
     if tr_list_len<18:
-        tr_list_true = tr_list[2:tr_list_len]
+        tr_list_true = tr_list[2:tr_list_len-1]
     else:
         tr_list_true = tr_list[2:17]
 
@@ -56,18 +58,18 @@ def download_lp_info(offset):
 # 每n秒执行一次
 def timer(n):
     global offset
-    while offset < 179:
+    while offset < 275:
         offset = offset + 1
 
         download_lp_info(offset)
 
         print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         print("=======================")
-        print("1秒钟后执行下一个")
+        print(offset)
         print("=======================")
 
-        time.sleep(n)
+        # time.sleep(n)
 
 
 if __name__ == '__main__':
-    timer(1)
+    timer(0.1)

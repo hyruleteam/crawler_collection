@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
 offset = 0
-FILE_PATH = "/"
+FILE_PATH = "result/octodex"
 def download_lp_info(offset):
     url = 'https://octodex.github.com'
 
@@ -18,8 +18,8 @@ def download_lp_info(offset):
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
     }
 
-    # payload = {'__EVENTARGUMENT':str(offset),'__VIEWSTATE':token,'__EVENTTARGET':'AspNetPager1'}
-    page = session.get(url,timeout=30000)
+    proxies = { "http": "http://127.0.0.1:1087", "https": "http://127.0.0.1:1087", } 
+    page = session.get(url,timeout=30000,proxies=proxies)
 
     soup = BeautifulSoup(page.text, features="html.parser")
     
